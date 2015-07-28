@@ -1,0 +1,250 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+AllRelRcds	evaluator/Evaluator.java	/^    public AllRelRcds(String qrelsFile) {$/;"	m	class:AllRelRcds
+AllRelRcds	evaluator/Evaluator.java	/^class AllRelRcds {$/;"	c
+AllRetrievedResults	evaluator/Evaluator.java	/^    public AllRetrievedResults(String resFile) {$/;"	m	class:AllRetrievedResults
+AllRetrievedResults	evaluator/Evaluator.java	/^class AllRetrievedResults {$/;"	c
+COMPOSING_DELIM	wvec/WordVec.java	/^    public static final String COMPOSING_DELIM = "+";$/;"	f	class:WordVec
+Evaluator	evaluator/Evaluator.java	/^    public Evaluator(Properties prop) {$/;"	m	class:Evaluator
+Evaluator	evaluator/Evaluator.java	/^    public Evaluator(String qrelsFile, String resFile) {$/;"	m	class:Evaluator
+Evaluator	evaluator/Evaluator.java	/^public class Evaluator {$/;"	c
+FIELD_ANALYZED_CONTENT	indexing/TrecDocIndexer.java	/^    static final public String FIELD_ANALYZED_CONTENT = "words";  \/\/ Standard analyzer w\/o stopwords.$/;"	f	class:TrecDocIndexer
+FIELD_ID	indexing/TrecDocIndexer.java	/^    static final public String FIELD_ID = "id";$/;"	f	class:TrecDocIndexer
+GaussianKernel	feedback/Kernel.java	/^    public GaussianKernel(float sigma, float h) {$/;"	m	class:GaussianKernel
+GaussianKernel	feedback/Kernel.java	/^class GaussianKernel implements Kernel {$/;"	c
+KLDivScoreComparator	feedback/OneDimKDE.java	/^class KLDivScoreComparator implements Comparator<ScoreDoc> {$/;"	c
+Kernel	feedback/Kernel.java	/^public interface Kernel {$/;"	i
+NNQueryExpander	retriever/NNQueryExpander.java	/^    public NNQueryExpander(Properties prop) {$/;"	m	class:NNQueryExpander
+NNQueryExpander	retriever/NNQueryExpander.java	/^    public NNQueryExpander(TrecDocIndexer indexer) {$/;"	m	class:NNQueryExpander
+NNQueryExpander	retriever/NNQueryExpander.java	/^public class NNQueryExpander {$/;"	c
+OneDimKDE	feedback/OneDimKDE.java	/^    public OneDimKDE(TrecDocRetriever retriever, TRECQuery trecQuery, TopDocs topDocs) throws Exception {$/;"	m	class:OneDimKDE
+OneDimKDE	feedback/OneDimKDE.java	/^public class OneDimKDE {$/;"	c
+PAYLOAD_DELIM	indexing/TrecDocIndexer.java	/^    static final char PAYLOAD_DELIM = '|';$/;"	f	class:TrecDocIndexer
+PerDocTermVector	feedback/RetrievedDocsTermStats.java	/^    public PerDocTermVector(int docId) {$/;"	m	class:PerDocTermVector
+PerDocTermVector	feedback/RetrievedDocsTermStats.java	/^class PerDocTermVector {$/;"	c
+PerQueryRelDocs	evaluator/Evaluator.java	/^    public PerQueryRelDocs(String qid) {$/;"	m	class:PerQueryRelDocs
+PerQueryRelDocs	evaluator/Evaluator.java	/^class PerQueryRelDocs {$/;"	c
+QueryVecComposer	feedback/QueryVecComposer.java	/^    public QueryVecComposer(TRECQuery trecQuery, WordVecs wvecs) {$/;"	m	class:QueryVecComposer
+QueryVecComposer	feedback/QueryVecComposer.java	/^public class QueryVecComposer {$/;"	c
+QueryWordVecs	feedback/QueryWordVecs.java	/^    public QueryWordVecs(TRECQuery query, WordVecs allwVecs) {$/;"	m	class:QueryWordVecs
+QueryWordVecs	feedback/QueryWordVecs.java	/^public class QueryWordVecs {$/;"	c
+ResultTuple	evaluator/Evaluator.java	/^    public ResultTuple(String docName, int rank) {$/;"	m	class:ResultTuple
+ResultTuple	evaluator/Evaluator.java	/^class ResultTuple implements Comparable<ResultTuple> {$/;"	c
+RetrievedDocTermInfo	feedback/RetrievedDocsTermStats.java	/^    public RetrievedDocTermInfo(WordVec wvec) {$/;"	m	class:RetrievedDocTermInfo
+RetrievedDocTermInfo	feedback/RetrievedDocsTermStats.java	/^class RetrievedDocTermInfo {$/;"	c
+RetrievedDocsTermStats	feedback/RetrievedDocsTermStats.java	/^    public RetrievedDocsTermStats(IndexReader reader, WordVecs wvecs, TopDocs topDocs) {$/;"	m	class:RetrievedDocsTermStats
+RetrievedDocsTermStats	feedback/RetrievedDocsTermStats.java	/^public class RetrievedDocsTermStats {$/;"	c
+RetrievedResults	evaluator/Evaluator.java	/^    public RetrievedResults(String qid) {$/;"	m	class:RetrievedResults
+RetrievedResults	evaluator/Evaluator.java	/^class RetrievedResults implements Comparable<RetrievedResults> {$/;"	c
+TRECQuery	trec/TRECQuery.java	/^    public TRECQuery(Analyzer analyzer) {$/;"	m	class:TRECQuery
+TRECQuery	trec/TRECQuery.java	/^public class TRECQuery {$/;"	c
+TRECQueryParser	trec/TRECQueryParser.java	/^    public TRECQueryParser(String fileName, Analyzer analyzer) throws SAXException {$/;"	m	class:TRECQueryParser
+TRECQueryParser	trec/TRECQueryParser.java	/^public class TRECQueryParser extends DefaultHandler {$/;"	c
+TrecDocIndexer	indexing/TrecDocIndexer.java	/^    public TrecDocIndexer(String propFile) throws Exception {$/;"	m	class:TrecDocIndexer
+TrecDocIndexer	indexing/TrecDocIndexer.java	/^public class TrecDocIndexer {$/;"	c
+TrecDocRetriever	retriever/TrecDocRetriever.java	/^    public TrecDocRetriever(String propFile) throws Exception {$/;"	m	class:TrecDocRetriever
+TrecDocRetriever	retriever/TrecDocRetriever.java	/^public class TrecDocRetriever {$/;"	c
+TriangularKernel	feedback/Kernel.java	/^    public TriangularKernel(float h) {$/;"	m	class:TriangularKernel
+TriangularKernel	feedback/Kernel.java	/^class TriangularKernel implements Kernel {$/;"	c
+WordVec	wvec/WordVec.java	/^    public WordVec(String line) {$/;"	m	class:WordVec
+WordVec	wvec/WordVec.java	/^    public WordVec(int dimension) { vec = new float[dimension]; }$/;"	m	class:WordVec
+WordVec	wvec/WordVec.java	/^public class WordVec implements Comparable<WordVec>, Serializable {$/;"	c
+WordVecs	wvec/WordVecs.java	/^    public WordVecs(Properties prop) throws Exception {$/;"	m	class:WordVecs
+WordVecs	wvec/WordVecs.java	/^    public WordVecs(String propFile) throws Exception {$/;"	m	class:WordVecs
+WordVecs	wvec/WordVecs.java	/^public class WordVecs {$/;"	c
+addQueryWordVec	feedback/QueryWordVecs.java	/^    void addQueryWordVec(String word) {$/;"	m	class:QueryWordVecs
+addQueryWordVec	feedback/QueryWordVecs.java	/^    void addQueryWordVec(WordVec wv) {$/;"	m	class:QueryWordVecs
+addTuple	evaluator/Evaluator.java	/^    void addTuple(String docId, int rel) {$/;"	m	class:PerQueryRelDocs
+addTuple	evaluator/Evaluator.java	/^    void addTuple(String docName, int rank) {$/;"	m	class:RetrievedResults
+allRelInfo	evaluator/Evaluator.java	/^    AllRelRcds allRelInfo;$/;"	f	class:AllRetrievedResults
+allRetMap	evaluator/Evaluator.java	/^    Map<String, RetrievedResults> allRetMap;$/;"	f	class:AllRetrievedResults
+allwvecs	feedback/QueryWordVecs.java	/^    WordVecs allwvecs;$/;"	f	class:QueryWordVecs
+analyzer	indexing/TrecDocIndexer.java	/^    Analyzer analyzer;$/;"	f	class:TrecDocIndexer
+analyzer	trec/TRECQueryParser.java	/^    Analyzer            analyzer;$/;"	f	class:TRECQueryParser
+applyFeedback	retriever/TrecDocRetriever.java	/^    public void applyFeedback(TRECQuery query, TopDocs topDocs) throws Exception {$/;"	m	class:TrecDocRetriever
+avgP	evaluator/Evaluator.java	/^    float avgP;    $/;"	f	class:RetrievedResults
+buff	trec/TRECQueryParser.java	/^    StringBuffer        buff;      \/\/ Accumulation buffer for storing the current topic$/;"	f	class:TRECQueryParser
+buildAllStats	feedback/RetrievedDocsTermStats.java	/^    public void buildAllStats() throws Exception {$/;"	m	class:RetrievedDocsTermStats
+buildStatsForSingleDoc	feedback/RetrievedDocsTermStats.java	/^    PerDocTermVector buildStatsForSingleDoc(int docId) throws Exception {$/;"	m	class:RetrievedDocsTermStats
+buildStopwordList	indexing/TrecDocIndexer.java	/^    private List<String> buildStopwordList(String stopwordFileName) {$/;"	m	class:TrecDocIndexer	file:
+buildTermStats	feedback/OneDimKDE.java	/^    public void buildTermStats() throws Exception {$/;"	m	class:OneDimKDE
+centroid	wvec/WordVec.java	/^    static public WordVec centroid(WordVec a, WordVec b) {$/;"	m	class:WordVec
+characters	trec/TRECQueryParser.java	/^    public void characters(char ch[], int start, int length) throws SAXException {$/;"	m	class:TRECQueryParser
+compare	feedback/OneDimKDE.java	/^    public int compare(ScoreDoc a, ScoreDoc b) {$/;"	m	class:KLDivScoreComparator
+compareTo	evaluator/Evaluator.java	/^    public int compareTo(ResultTuple t) {$/;"	m	class:ResultTuple
+compareTo	evaluator/Evaluator.java	/^    public int compareTo(RetrievedResults that) {$/;"	m	class:RetrievedResults
+compareTo	wvec/WordVec.java	/^    public int compareTo(WordVec that) {$/;"	m	class:WordVec
+composer	feedback/OneDimKDE.java	/^    QueryVecComposer composer;$/;"	f	class:OneDimKDE
+computeAP	evaluator/Evaluator.java	/^    float computeAP() {$/;"	m	class:RetrievedResults
+computeAll	evaluator/Evaluator.java	/^    String computeAll() {$/;"	m	class:AllRetrievedResults
+computeAll	evaluator/Evaluator.java	/^    public String computeAll() {$/;"	m	class:Evaluator
+computeAndStoreNNs	wvec/WordVecs.java	/^    public void computeAndStoreNNs() {$/;"	m	class:WordVecs
+computeKDE	feedback/OneDimKDE.java	/^    public void computeKDE() throws Exception {$/;"	m	class:OneDimKDE
+computeKernelFunction	feedback/OneDimKDE.java	/^    float computeKernelFunction(WordVec a, WordVec b) {$/;"	m	class:OneDimKDE
+computeNorm	wvec/WordVec.java	/^    private float computeNorm() {$/;"	m	class:WordVec	file:
+computeRecall	evaluator/Evaluator.java	/^    float computeRecall() {$/;"	m	class:RetrievedResults
+constructAnalyzer	indexing/TrecDocIndexer.java	/^    Analyzer constructAnalyzer() {$/;"	m	class:TrecDocIndexer
+constructDoc	indexing/TrecDocIndexer.java	/^    Document constructDoc(String id, String content) throws IOException {$/;"	m	class:TrecDocIndexer
+constructLuceneQueryObj	trec/TRECQuery.java	/^    public Query constructLuceneQueryObj() throws QueryNodeException {        $/;"	m	class:TRECQuery
+constructQueries	retriever/TrecDocRetriever.java	/^    public List<TRECQuery> constructQueries() throws Exception {        $/;"	m	class:TrecDocRetriever
+cosineSim	wvec/WordVec.java	/^    public float cosineSim(WordVec that) {$/;"	m	class:WordVec
+decodeFromByteArray	wvec/WordVec.java	/^    static WordVec decodeFromByteArray(BytesRef bytes) throws Exception {$/;"	m	class:WordVec
+desc	trec/TRECQuery.java	/^    public String       desc;$/;"	f	class:TRECQuery
+df	feedback/RetrievedDocsTermStats.java	/^    long df;$/;"	f	class:RetrievedDocTermInfo
+docId	feedback/RetrievedDocsTermStats.java	/^    int docId;$/;"	f	class:PerDocTermVector
+docName	evaluator/Evaluator.java	/^    String docName; \/\/ doc name$/;"	f	class:ResultTuple
+docTermVecs	feedback/RetrievedDocsTermStats.java	/^    List<PerDocTermVector> docTermVecs;$/;"	f	class:RetrievedDocsTermStats
+endElement	trec/TRECQueryParser.java	/^    public void endElement(String uri, String localName, String qName) throws SAXException {$/;"	m	class:TRECQueryParser
+euclideanDist	wvec/WordVec.java	/^    public float euclideanDist(WordVec that) {$/;"	m	class:WordVec
+evaluate	retriever/TrecDocRetriever.java	/^    public void evaluate() throws Exception {$/;"	m	class:TrecDocRetriever
+evaluator	evaluator/Evaluator.java	/^package evaluator;$/;"	p
+expandQueriesWithNN	retriever/NNQueryExpander.java	/^    public void expandQueriesWithNN(List<TRECQuery> queries) {$/;"	m	class:NNQueryExpander
+expandQuery	retriever/NNQueryExpander.java	/^    void expandQuery(TRECQuery query) {$/;"	m	class:NNQueryExpander
+fKernel	feedback/Kernel.java	/^    float fKernel(float dist);$/;"	m	interface:Kernel
+fKernel	feedback/Kernel.java	/^    public float fKernel(float dist) { \/\/ scaled kernel K_h(x) = 1\/h K(x\/h)$/;"	m	class:GaussianKernel
+fKernel	feedback/Kernel.java	/^    public float fKernel(float dist) {$/;"	m	class:TriangularKernel
+feedback	feedback/Kernel.java	/^package feedback;$/;"	p
+feedback	feedback/OneDimKDE.java	/^package feedback;$/;"	p
+feedback	feedback/QueryVecComposer.java	/^package feedback;$/;"	p
+feedback	feedback/QueryWordVecs.java	/^package feedback;$/;"	p
+feedback	feedback/RetrievedDocsTermStats.java	/^package feedback;$/;"	p
+fileName	trec/TRECQueryParser.java	/^    String              fileName;$/;"	f	class:TRECQueryParser
+fillRelInfo	evaluator/Evaluator.java	/^    public void fillRelInfo() {$/;"	m	class:Evaluator
+fillRelInfo	evaluator/Evaluator.java	/^    public void fillRelInfo(AllRelRcds relInfo) {$/;"	m	class:AllRetrievedResults
+fillRelInfo	evaluator/Evaluator.java	/^    void fillRelInfo(PerQueryRelDocs relInfo) {$/;"	m	class:RetrievedResults
+formComposedQuery	feedback/QueryVecComposer.java	/^    void formComposedQuery() {$/;"	m	class:QueryVecComposer
+getAnalyzer	indexing/TrecDocIndexer.java	/^    public Analyzer getAnalyzer() { return analyzer; }$/;"	m	class:TrecDocIndexer
+getBytes	wvec/WordVec.java	/^    public byte[] getBytes() throws IOException {$/;"	m	class:WordVec
+getIndexDir	indexing/TrecDocIndexer.java	/^    public File getIndexDir() { return indexDir; }$/;"	m	class:TrecDocIndexer
+getLuceneQueryObj	trec/TRECQuery.java	/^    public Query getLuceneQueryObj() { return luceneQuery; }$/;"	m	class:TRECQuery
+getNearestNeighbors	wvec/WordVecs.java	/^    public List<WordVec> getNearestNeighbors(String queryWord) {$/;"	m	class:WordVecs
+getNearestNeighbors	wvec/WordVecs.java	/^    public List<WordVec> getNearestNeighbors(WordVec queryVec) {$/;"	m	class:WordVecs
+getNormalizedTf	feedback/RetrievedDocsTermStats.java	/^    public float getNormalizedTf(String term) {$/;"	m	class:PerDocTermVector
+getProperties	indexing/TrecDocIndexer.java	/^    public Properties getProperties() { return prop; }$/;"	m	class:TrecDocIndexer
+getProperties	retriever/TrecDocRetriever.java	/^    public Properties getProperties() { return prop; }$/;"	m	class:TrecDocRetriever
+getQueries	trec/TRECQueryParser.java	/^    public List<TRECQuery> getQueries() { return queries; }$/;"	m	class:TRECQueryParser
+getQuerySim	wvec/WordVec.java	/^    public float getQuerySim() { return querySim; }$/;"	m	class:WordVec
+getQueryWordVecs	feedback/QueryVecComposer.java	/^    QueryWordVecs getQueryWordVecs() { return qvecs; }$/;"	m	class:QueryVecComposer
+getReader	retriever/TrecDocRetriever.java	/^    public IndexReader getReader() { return reader; }$/;"	m	class:TrecDocRetriever
+getRelInfo	evaluator/Evaluator.java	/^    PerQueryRelDocs getRelInfo(String qid) {$/;"	m	class:AllRelRcds
+getSim	wvec/WordVecs.java	/^    public float getSim(String u, String v) {$/;"	m	class:WordVecs
+getTermStats	feedback/RetrievedDocsTermStats.java	/^    RetrievedDocTermInfo getTermStats(WordVec wv) {$/;"	m	class:RetrievedDocsTermStats
+getTotalNumRel	evaluator/Evaluator.java	/^    int getTotalNumRel() {$/;"	m	class:AllRelRcds
+getVec	wvec/WordVecs.java	/^    public WordVec getVec(String word) {$/;"	m	class:WordVecs
+getVecs	feedback/QueryWordVecs.java	/^    List<WordVec> getVecs() { return wvecs; }    $/;"	m	class:QueryWordVecs
+getWord	wvec/WordVec.java	/^    public String getWord() { return word; }$/;"	m	class:WordVec
+h	feedback/Kernel.java	/^    float h;$/;"	f	class:GaussianKernel
+h	feedback/Kernel.java	/^    float h;$/;"	f	class:TriangularKernel
+id	trec/TRECQuery.java	/^    public String       id;$/;"	f	class:TRECQuery
+indexAll	indexing/TrecDocIndexer.java	/^    void indexAll() throws Exception {$/;"	m	class:TrecDocIndexer
+indexDir	indexing/TrecDocIndexer.java	/^    File indexDir;$/;"	f	class:TrecDocIndexer
+indexDirectory	indexing/TrecDocIndexer.java	/^    private void indexDirectory(File dir) throws Exception {$/;"	m	class:TrecDocIndexer	file:
+indexFile	indexing/TrecDocIndexer.java	/^    void indexFile(File file) throws Exception {$/;"	m	class:TrecDocIndexer
+indexer	retriever/TrecDocRetriever.java	/^    TrecDocIndexer indexer;$/;"	f	class:TrecDocRetriever
+indexing	indexing/TrecDocIndexer.java	/^package indexing;$/;"	p
+init	wvec/WordVecs.java	/^    void init() {$/;"	m	class:WordVecs
+isComposed	wvec/WordVec.java	/^    public boolean isComposed() { return isComposed; }$/;"	m	class:WordVec
+isComposed	wvec/WordVec.java	/^    transient boolean isComposed;$/;"	f	class:WordVec
+k	wvec/WordVecs.java	/^    int k;$/;"	f	class:WordVecs
+kernels	feedback/OneDimKDE.java	/^    HashMap<String, Kernel> kernels;$/;"	f	class:OneDimKDE
+load	evaluator/Evaluator.java	/^    public void load() throws Exception {$/;"	m	class:Evaluator
+load	evaluator/Evaluator.java	/^    public void load() {$/;"	m	class:AllRetrievedResults
+load	evaluator/Evaluator.java	/^    void load() throws Exception {$/;"	m	class:AllRelRcds
+loadFromTextFile	wvec/WordVecs.java	/^    void loadFromTextFile() {$/;"	m	class:WordVecs
+loadObjectFromSerFile	wvec/WordVecs.java	/^    void loadObjectFromSerFile() {$/;"	m	class:WordVecs
+luceneQuery	trec/TRECQuery.java	/^    public Query        luceneQuery;$/;"	f	class:TRECQuery
+main	evaluator/Evaluator.java	/^    public static void main(String[] args) {$/;"	m	class:Evaluator
+main	indexing/TrecDocIndexer.java	/^    public static void main(String[] args) {$/;"	m	class:TrecDocIndexer
+main	retriever/TrecDocRetriever.java	/^    public static void main(String[] args) {$/;"	m	class:TrecDocRetriever
+main	trec/TRECQueryParser.java	/^    public static void main(String[] args) {$/;"	m	class:TRECQueryParser
+main	wvec/WordVecs.java	/^    public static void main(String[] args) {$/;"	m	class:WordVecs
+narr	trec/TRECQuery.java	/^    public String       narr;$/;"	f	class:TRECQuery
+nearestWordVecsMap	wvec/WordVecs.java	/^    HashMap<String, List<WordVec>> nearestWordVecsMap; \/\/ Store the pre-computed NNs$/;"	f	class:WordVecs
+norm	wvec/WordVec.java	/^    float norm;$/;"	f	class:WordVec
+numRel	evaluator/Evaluator.java	/^    int numRel;$/;"	f	class:PerQueryRelDocs
+numRelRet	evaluator/Evaluator.java	/^    int numRelRet;$/;"	f	class:RetrievedResults
+numWanted	retriever/TrecDocRetriever.java	/^    int numWanted;$/;"	f	class:TrecDocRetriever
+origTerms	feedback/QueryVecComposer.java	/^    HashSet<Term> origTerms;$/;"	f	class:QueryVecComposer
+parse	trec/TRECQueryParser.java	/^    public void parse() throws Exception {$/;"	m	class:TRECQueryParser
+pass	indexing/TrecDocIndexer.java	/^    int pass;$/;"	f	class:TrecDocIndexer
+perDocStats	feedback/RetrievedDocsTermStats.java	/^    HashMap<String, RetrievedDocTermInfo> perDocStats;$/;"	f	class:PerDocTermVector
+perQueryRels	evaluator/Evaluator.java	/^    HashMap<String, PerQueryRelDocs> perQueryRels;$/;"	f	class:AllRelRcds
+precAtTop	evaluator/Evaluator.java	/^    float precAtTop(int k) {$/;"	m	class:RetrievedResults
+prepareQueryVector	feedback/OneDimKDE.java	/^    public void prepareQueryVector() {$/;"	m	class:OneDimKDE
+processAll	indexing/TrecDocIndexer.java	/^    void processAll() throws Exception {$/;"	m	class:TrecDocIndexer
+prop	feedback/OneDimKDE.java	/^    Properties prop;$/;"	f	class:OneDimKDE
+prop	indexing/TrecDocIndexer.java	/^    Properties prop;$/;"	f	class:TrecDocIndexer
+prop	retriever/TrecDocRetriever.java	/^    Properties prop;$/;"	f	class:TrecDocRetriever
+prop	wvec/WordVecs.java	/^    Properties prop;$/;"	f	class:WordVecs
+qid	evaluator/Evaluator.java	/^    String qid;$/;"	f	class:PerQueryRelDocs
+qid	evaluator/Evaluator.java	/^    int qid;$/;"	f	class:RetrievedResults
+qrelsFile	evaluator/Evaluator.java	/^    String qrelsFile;$/;"	f	class:AllRelRcds
+queries	trec/TRECQueryParser.java	/^    public List<TRECQuery>  queries;$/;"	f	class:TRECQueryParser
+query	feedback/QueryWordVecs.java	/^    TRECQuery query;$/;"	f	class:QueryWordVecs
+query	trec/TRECQueryParser.java	/^    TRECQuery           query;$/;"	f	class:TRECQueryParser
+queryParser	trec/TRECQuery.java	/^    StandardQueryParser queryParser;$/;"	f	class:TRECQuery
+querySim	wvec/WordVec.java	/^    float querySim; \/\/ distance from a reference query point$/;"	f	class:WordVec
+qvecs	feedback/QueryVecComposer.java	/^    QueryWordVecs qvecs;$/;"	f	class:QueryVecComposer
+qwvecs	feedback/OneDimKDE.java	/^    QueryWordVecs qwvecs;$/;"	f	class:OneDimKDE
+rank	evaluator/Evaluator.java	/^    int rank;       \/\/ rank of retrieved document$/;"	f	class:ResultTuple
+reader	feedback/RetrievedDocsTermStats.java	/^    IndexReader reader;$/;"	f	class:RetrievedDocsTermStats
+reader	retriever/TrecDocRetriever.java	/^    IndexReader reader;$/;"	f	class:TrecDocRetriever
+rel	evaluator/Evaluator.java	/^    int rel;    \/\/ is this relevant? comes from qrel-info$/;"	f	class:ResultTuple
+relInfo	evaluator/Evaluator.java	/^    PerQueryRelDocs relInfo;$/;"	f	class:RetrievedResults
+relMap	evaluator/Evaluator.java	/^    HashMap<String, Integer> relMap; \/\/ keyed by docid, entry stores the rel value$/;"	f	class:PerQueryRelDocs
+relRcds	evaluator/Evaluator.java	/^    AllRelRcds relRcds;$/;"	f	class:Evaluator
+rerankDocs	feedback/OneDimKDE.java	/^    TopDocs rerankDocs() {$/;"	m	class:OneDimKDE
+resFile	evaluator/Evaluator.java	/^    String resFile;$/;"	f	class:AllRetrievedResults
+retRcds	evaluator/Evaluator.java	/^    AllRetrievedResults retRcds;$/;"	f	class:Evaluator
+retrieveAll	retriever/TrecDocRetriever.java	/^    public void retrieveAll() throws Exception {$/;"	m	class:TrecDocRetriever
+retrievedDocsTermStats	feedback/OneDimKDE.java	/^    RetrievedDocsTermStats retrievedDocsTermStats;$/;"	f	class:OneDimKDE
+retriever	feedback/OneDimKDE.java	/^    TrecDocRetriever retriever;$/;"	f	class:OneDimKDE
+retriever	retriever/NNQueryExpander.java	/^package retriever;$/;"	p
+retriever	retriever/TrecDocRetriever.java	/^package retriever;$/;"	p
+rtuples	evaluator/Evaluator.java	/^    List<ResultTuple> rtuples;$/;"	f	class:RetrievedResults
+runName	retriever/TrecDocRetriever.java	/^    String runName;$/;"	f	class:TrecDocRetriever
+saveRetrievedTuples	retriever/TrecDocRetriever.java	/^    public void saveRetrievedTuples(FileWriter fw, TRECQuery query, TopDocs topDocs) throws Exception {$/;"	m	class:TrecDocRetriever
+searcher	retriever/TrecDocRetriever.java	/^    IndexSearcher searcher;$/;"	f	class:TrecDocRetriever
+sigma	feedback/Kernel.java	/^    float sigma;$/;"	f	class:GaussianKernel
+startElement	trec/TRECQueryParser.java	/^    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {$/;"	m	class:TRECQueryParser
+stopwords	indexing/TrecDocIndexer.java	/^    List<String> stopwords;$/;"	f	class:TrecDocIndexer
+storeRelRcd	evaluator/Evaluator.java	/^    void storeRelRcd(String line) {$/;"	m	class:AllRelRcds
+storeRetRcd	evaluator/Evaluator.java	/^    void storeRetRcd(String line) {$/;"	m	class:AllRetrievedResults
+storeVectorsAsSerializedObject	wvec/WordVecs.java	/^    public void storeVectorsAsSerializedObject() throws Exception {$/;"	m	class:WordVecs
+sumDf	feedback/RetrievedDocsTermStats.java	/^    float sumDf;$/;"	f	class:RetrievedDocsTermStats
+sumTf	feedback/RetrievedDocsTermStats.java	/^    int sumTf;$/;"	f	class:RetrievedDocsTermStats
+sum_tf	feedback/RetrievedDocsTermStats.java	/^    int sum_tf;$/;"	f	class:PerDocTermVector
+tags	trec/TRECQueryParser.java	/^    final static String[] tags = {"id", "title", "desc", "narr"};$/;"	f	class:TRECQueryParser
+termArray	feedback/QueryVecComposer.java	/^    String[] termArray;$/;"	f	class:QueryVecComposer
+termStats	feedback/RetrievedDocsTermStats.java	/^    Map<String, RetrievedDocTermInfo> termStats;$/;"	f	class:RetrievedDocsTermStats
+tf	feedback/RetrievedDocsTermStats.java	/^    int tf;$/;"	f	class:RetrievedDocTermInfo
+title	trec/TRECQuery.java	/^    public String       title;$/;"	f	class:TRECQuery
+toString	evaluator/Evaluator.java	/^    public String toString() {$/;"	m	class:AllRelRcds
+toString	evaluator/Evaluator.java	/^    public String toString() {$/;"	m	class:AllRetrievedResults
+toString	evaluator/Evaluator.java	/^    public String toString() {$/;"	m	class:Evaluator
+toString	evaluator/Evaluator.java	/^    public String toString() {$/;"	m	class:RetrievedResults
+toString	trec/TRECQuery.java	/^    public String toString() {$/;"	m	class:TRECQuery
+topDocs	feedback/OneDimKDE.java	/^    TopDocs topDocs;$/;"	f	class:OneDimKDE
+topDocs	feedback/RetrievedDocsTermStats.java	/^    TopDocs topDocs;$/;"	f	class:RetrievedDocsTermStats
+totalNumRel	evaluator/Evaluator.java	/^    int totalNumRel;$/;"	f	class:AllRelRcds
+trec	trec/TRECQuery.java	/^package trec;$/;"	p
+trec	trec/TRECQueryParser.java	/^package trec;$/;"	p
+trecQuery	feedback/OneDimKDE.java	/^    TRECQuery trecQuery;$/;"	f	class:OneDimKDE
+trecQuery	feedback/QueryVecComposer.java	/^    TRECQuery trecQuery;$/;"	f	class:QueryVecComposer
+vec	wvec/WordVec.java	/^    float[] vec;$/;"	f	class:WordVec
+word	wvec/WordVec.java	/^    String word;$/;"	f	class:WordVec
+wordvecmap	wvec/WordVecs.java	/^    HashMap<String, WordVec> wordvecmap;$/;"	f	class:WordVecs
+writer	indexing/TrecDocIndexer.java	/^    IndexWriter writer;$/;"	f	class:TrecDocIndexer
+wt	feedback/RetrievedDocsTermStats.java	/^    float wt;   \/\/ weight of this term, e.g. the P(w|R) value    $/;"	f	class:RetrievedDocTermInfo
+wvec	feedback/RetrievedDocsTermStats.java	/^    WordVec wvec;$/;"	f	class:RetrievedDocTermInfo
+wvec	wvec/WordVec.java	/^package wvec;$/;"	p
+wvec	wvec/WordVecs.java	/^package wvec;$/;"	p
+wvecs	feedback/OneDimKDE.java	/^    static WordVecs wvecs;  \/\/ to be shared across every feedback$/;"	f	class:OneDimKDE
+wvecs	feedback/QueryVecComposer.java	/^    WordVecs wvecs;$/;"	f	class:QueryVecComposer
+wvecs	feedback/QueryWordVecs.java	/^    List<WordVec> wvecs;$/;"	f	class:QueryWordVecs
+wvecs	feedback/RetrievedDocsTermStats.java	/^    WordVecs wvecs;$/;"	f	class:RetrievedDocsTermStats
+wvecs	retriever/NNQueryExpander.java	/^    WordVecs wvecs;$/;"	f	class:NNQueryExpander
