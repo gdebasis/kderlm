@@ -43,8 +43,9 @@ public class OneDimKDE {
     Kernel kernelF;
     int numTopDocs;
     float mixingLambda;
-    NNQueryExpander qc;
-      
+    boolean toExpand;
+    NNQueryExpander nnQexpander;
+    
     static WordVecs wvecs;  // to be shared across every feedback
                             // object (one for each query)
             
@@ -70,9 +71,12 @@ public class OneDimKDE {
                 ));
         kernelF = kernels.get(prop.getProperty("kde.kernel"));        
         numTopDocs = Integer.parseInt(prop.getProperty("kde.numtopdocs"));
-        mixingLambda = Float.parseFloat(prop.getProperty("kde.lambda"));
+        mixingLambda = Float.parseFloat(prop.getProperty("kde.lambda"));        
+        toExpand = Boolean.parseBoolean(prop.getProperty("preretrieval.queryexpansion", "false"));
         
-        qc = new NNQueryExpander(wvecs);  
+        if (toExpand)
+            nnQexpander = new NNQueryExpander(this.retrievedDocsTermStats.wvecs,
+                    Integer.parseInt(prop.getProperty("preretrieval.queryexpansion.nterms")));            
     }
         
     float computeKernelFunction(WordVec a, WordVec b) {
@@ -81,7 +85,10 @@ public class OneDimKDE {
     }
     
     public void prepareQueryVector() {
-        qc.expandQuery(trecQuery); // modifies the parameter trecQuery
+        
+        if (toExpand) {
+            nnQexpander.expandQuery(trecQuery);
+        }
         
         if (Boolean.parseBoolean(prop.getProperty("kde.compose")))
             composer.formComposedQuery();
@@ -114,6 +121,8 @@ public class OneDimKDE {
         for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
             RetrievedDocTermInfo w = e.getValue();
             f_w = 0;
+            p_w = mixTfIdf(w);
+            
             for (WordVec qwvec : qwvecs.getVecs()) {
                 if (qwvec == null)
                     continue; // a very rare case where a query term is OOV
@@ -131,7 +140,6 @@ public class OneDimKDE {
                 else
                     p_q = qtermInfo.tf/(float)retrievedDocsTermStats.sumTf;
                 
-                p_w = mixTfIdf(w);
                 this_wt = p_q * p_w * computeKernelFunction(qwvec, w.wvec);
                 f_w += this_wt;
             }

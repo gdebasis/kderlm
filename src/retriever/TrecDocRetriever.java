@@ -12,6 +12,7 @@ package retriever;
 import evaluator.Evaluator;
 import feedback.OneDimKDE;
 import feedback.RetrievedDocsTermStats;
+import feedback.TwoDimKDE;
 import indexing.TrecDocIndexer;
 import java.io.*;
 import java.util.*;
@@ -37,6 +38,7 @@ public class TrecDocRetriever {
     int numWanted;
     Properties prop;
     String runName;
+    String kdeType;
     
     public TrecDocRetriever(String propFile) throws Exception {
         indexer = new TrecDocIndexer(propFile);
@@ -54,6 +56,8 @@ public class TrecDocRetriever {
             
             numWanted = Integer.parseInt(prop.getProperty("retrieve.num_wanted", "1000"));
             runName = prop.getProperty("retrieve.runname", "lm");
+            
+            kdeType = prop.getProperty("kde.type", "uni");
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -77,6 +81,16 @@ public class TrecDocRetriever {
         FileWriter fw = new FileWriter(resultsFile);
         
         List<TRECQuery> queries = constructQueries();
+        
+        /*
+        boolean toExpand = Boolean.parseBoolean(prop.getProperty("preretrieval.queryexpansion", "false"));
+        
+        // Expand all queries
+        if (toExpand) {
+            NNQueryExpander nnQexpander = new NNQueryExpander(prop);
+            nnQexpander.expandQueriesWithNN(queries);
+        }
+        */
         
         for (TRECQuery query : queries) {
 
@@ -106,7 +120,11 @@ public class TrecDocRetriever {
     }
     
     public TopDocs applyFeedback(TRECQuery query, TopDocs topDocs) throws Exception {
-        OneDimKDE kde = new OneDimKDE(this, query, topDocs);
+        OneDimKDE kde;
+                
+        kde = kdeType.equals("uni")? new OneDimKDE(this, query, topDocs) :
+                new TwoDimKDE(this, query, topDocs);
+        
         kde.computeKDE();
         return kde.rerankDocs();
     }

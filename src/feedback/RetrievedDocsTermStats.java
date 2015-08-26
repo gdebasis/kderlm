@@ -46,6 +46,7 @@ class RetrievedDocTermInfo {
 class PerDocTermVector {
     int docId;
     int sum_tf;
+    float sim;  // similarity with query
     HashMap<String, RetrievedDocTermInfo> perDocStats;
     
     public PerDocTermVector(int docId) {
@@ -59,6 +60,32 @@ class PerDocTermVector {
         if (tInfo == null)
             return 0;
         return perDocStats.get(term).tf/(float)sum_tf;
+    }
+    
+    RetrievedDocTermInfo getTermStats(WordVec wv) {
+        RetrievedDocTermInfo tInfo;
+        String qTerm = wv.getWord();
+        if (qTerm == null)
+            return null;
+        
+        // Check if this word is a composed vector
+        if (!wv.isComposed()) {
+            tInfo = this.perDocStats.get(qTerm);
+            return tInfo;
+        }
+            
+        // Split up the composed into it's constituents
+        String[] qTerms = qTerm.split(WordVec.COMPOSING_DELIM);
+        RetrievedDocTermInfo firstTerm = this.perDocStats.get(qTerms[0]);
+        if (firstTerm == null)
+            return null;
+        RetrievedDocTermInfo secondTerm = this.perDocStats.get(qTerms[1]);
+        if (secondTerm == null)
+            return null;
+        tInfo = new RetrievedDocTermInfo(wv);
+        tInfo.tf = firstTerm.tf * secondTerm.tf;
+        
+        return tInfo;
     }    
 }
 
@@ -88,7 +115,7 @@ public class RetrievedDocsTermStats {
         int rank = 0;
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             int docId = scoreDoc.doc;
-            docTermVecs.add(buildStatsForSingleDoc(docId, rank));
+            docTermVecs.add(buildStatsForSingleDoc(docId, rank, scoreDoc.score));
             rank++;
         }
     }
@@ -119,7 +146,7 @@ public class RetrievedDocsTermStats {
         return tInfo;
     }
     
-    PerDocTermVector buildStatsForSingleDoc(int docId, int rank) throws Exception {
+    PerDocTermVector buildStatsForSingleDoc(int docId, int rank, float sim) throws Exception {
         String termText;
         BytesRef term;
         Terms tfvector;
@@ -128,6 +155,7 @@ public class RetrievedDocsTermStats {
         int tf;
         RetrievedDocTermInfo trmInfo;
         PerDocTermVector docTermVector = new PerDocTermVector(docId);
+        docTermVector.sim = sim;  // sim value for document D_j
         
         tfvector = reader.getTermVector(docId, TrecDocIndexer.FIELD_ANALYZED_CONTENT);
         if (tfvector == null || tfvector.size() == 0)

@@ -48,6 +48,9 @@ public class WordVecs {
     }
     
     void init() {
+        if (wordvecmap != null)
+            return; // already loaded from somewhere else in the flow...
+        
         k = Integer.parseInt(prop.getProperty("wordvecs.numnearest", "5"));
         String loadFrom = prop.getProperty("wordvecs.readfrom");
         if (loadFrom.equals("vec"))
