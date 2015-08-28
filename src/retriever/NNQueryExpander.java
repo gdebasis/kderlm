@@ -61,7 +61,7 @@ public class NNQueryExpander {
             System.out.println("Loading wordvecs in memory...");
             wvecs = new WordVecs(prop);
             System.out.println("Loaded wordvecs in memory...");
-            numTerms = Integer.parseInt(prop.getProperty("kde.queryexpansion.nterms"));
+            numTerms = Integer.parseInt(prop.getProperty("queryexpansion.nterms"));
         }
         catch (Exception ex) { ex.printStackTrace(); }        
     }

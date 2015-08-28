@@ -72,11 +72,11 @@ public class OneDimKDE {
         kernelF = kernels.get(prop.getProperty("kde.kernel"));        
         numTopDocs = Integer.parseInt(prop.getProperty("kde.numtopdocs"));
         mixingLambda = Float.parseFloat(prop.getProperty("kde.lambda"));        
-        toExpand = Boolean.parseBoolean(prop.getProperty("preretrieval.queryexpansion", "false"));
+        toExpand = Boolean.parseBoolean(prop.getProperty("kde.queryexpansion", "false"));
         
         if (toExpand)
-            nnQexpander = new NNQueryExpander(this.retrievedDocsTermStats.wvecs,
-                    Integer.parseInt(prop.getProperty("preretrieval.queryexpansion.nterms")));            
+            nnQexpander = new NNQueryExpander(wvecs,
+                    Integer.parseInt(prop.getProperty("queryexpansion.nterms")));            
     }
         
     float computeKernelFunction(WordVec a, WordVec b) {

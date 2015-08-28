@@ -82,15 +82,12 @@ public class TrecDocRetriever {
         
         List<TRECQuery> queries = constructQueries();
         
-        /*
-        boolean toExpand = Boolean.parseBoolean(prop.getProperty("preretrieval.queryexpansion", "false"));
-        
+        boolean toExpand = Boolean.parseBoolean(prop.getProperty("preretrieval.queryexpansion", "false"));        
         // Expand all queries
         if (toExpand) {
             NNQueryExpander nnQexpander = new NNQueryExpander(prop);
             nnQexpander.expandQueriesWithNN(queries);
         }
-        */
         
         for (TRECQuery query : queries) {
 

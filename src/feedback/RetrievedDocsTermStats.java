@@ -95,6 +95,7 @@ public class RetrievedDocsTermStats {
     WordVecs wvecs;
     int sumTf;
     float sumDf;
+    float sumSim;
     Map<String, RetrievedDocTermInfo> termStats;
     List<PerDocTermVector> docTermVecs;
     int numTopDocs;
@@ -178,7 +179,8 @@ public class RetrievedDocsTermStats {
             if (rank >= numTopDocs) {
                 continue;
             }
-            // all collection            
+            
+            // collection stats for top k docs
             trmInfo = termStats.get(termText);
             if (trmInfo == null) {
                 trmInfo = new RetrievedDocTermInfo(termVec);
@@ -187,6 +189,7 @@ public class RetrievedDocsTermStats {
             trmInfo.tf += tf;
             trmInfo.df++;
             sumTf += tf;
+            sumSim += sim;
         }
         return docTermVector;
     }

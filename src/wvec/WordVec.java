@@ -62,7 +62,7 @@ public class WordVec implements Comparable<WordVec>, Serializable {
         WordVec sum = new WordVec(a.vec.length);
         sum.word = a.word + COMPOSING_DELIM + b.word;
         for (int i = 0; i < a.vec.length; i++) {
-            sum.vec[i] = (a.vec[i] + b.vec[i])/2;
+            sum.vec[i] = (a.vec[i] + b.vec[i]);
         }
         sum.isComposed = true;
         return sum;
