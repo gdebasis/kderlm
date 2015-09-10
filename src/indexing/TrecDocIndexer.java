@@ -127,7 +127,7 @@ public class TrecDocIndexer {
         // For the 1st pass, use a standard analyzer to write out
         // the words (also store the term vector)
         doc.add(new Field(FIELD_ANALYZED_CONTENT, content,
-                Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
+                Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES));
         
         return doc;
     }
