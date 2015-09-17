@@ -152,7 +152,7 @@ public class WordVecs {
     
     public static void main(String[] args) {
         try {
-            WordVecs qe = new WordVecs("init.properties");
+            WordVecs qe = new WordVecs("wt10g.properties");
             qe.storeVectorsAsSerializedObject();
             /*
             List<WordVec> nwords = qe.getNearestNeighbors("test");

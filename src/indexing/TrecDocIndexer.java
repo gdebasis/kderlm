@@ -31,6 +31,7 @@ import org.jsoup.select.Elements;
  *
  * @author Debasis
  */
+
 public class TrecDocIndexer {
     Properties prop;
     File indexDir;
@@ -41,12 +42,10 @@ public class TrecDocIndexer {
     
     static final public String FIELD_ID = "id";
     static final public String FIELD_ANALYZED_CONTENT = "words";  // Standard analyzer w/o stopwords.
-    static final char PAYLOAD_DELIM = '|';
 
-    private List<String> buildStopwordList(String stopwordFileName) {
+    protected List<String> buildStopwordList(String stopwordFileName) {
         List<String> stopwords = new ArrayList<>();
-        String stopFile = prop.getProperty(stopwordFileName);
-        
+        String stopFile = prop.getProperty(stopwordFileName);        
         String line;
 
         try (FileReader fr = new FileReader(stopFile);
@@ -127,11 +126,11 @@ public class TrecDocIndexer {
         // For the 1st pass, use a standard analyzer to write out
         // the words (also store the term vector)
         doc.add(new Field(FIELD_ANALYZED_CONTENT, content,
-                Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES));
+                Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
         
         return doc;
     }
-    
+
     void indexFile(File file) throws Exception {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);

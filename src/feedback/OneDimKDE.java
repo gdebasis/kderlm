@@ -59,7 +59,7 @@ public class OneDimKDE {
         this.retriever = retriever;
         this.trecQuery = trecQuery;
         this.topDocs = topDocs;
-        composer = new QueryVecComposer(trecQuery, wvecs);
+        composer = new QueryVecComposer(trecQuery, wvecs, prop);
         kernels = new HashMap<>();
         kernels.put("gaussian",
                 new GaussianKernel(

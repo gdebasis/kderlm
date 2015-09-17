@@ -39,9 +39,10 @@ class PerQueryRelDocs {
     void addTuple(String docId, int rel) {
         if (relMap.get(docId) != null)
             return;
-        if (rel > 0)
+        if (rel > 0) {
             numRel++;
-        relMap.put(docId, rel);
+            relMap.put(docId, rel);
+        }
     }    
 }
 
