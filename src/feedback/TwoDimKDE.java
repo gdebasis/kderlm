@@ -21,12 +21,6 @@ public class TwoDimKDE extends OneDimKDE {
         super(retriever, trecQuery, topDocs);
     }
 
-    float mixTfIdf(RetrievedDocTermInfo w, PerDocTermVector docvec) {
-        RetrievedDocTermInfo wGlobalInfo = retrievedDocsTermStats.termStats.get(w.wvec.getWord());
-        return mixingLambda*w.tf/(float)docvec.sum_tf +
-                (1-mixingLambda)*wGlobalInfo.df/retrievedDocsTermStats.sumDf;        
-    }
-        
     @Override
     public void computeKDE() throws Exception {
         float f_w; // KDE estimation for term w

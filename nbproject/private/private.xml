@@ -3,16 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/research/kderlm/kderlm/src/feedback/OneDimKDE.java</file>
-            <file>file:/C:/research/kderlm/kderlm/init.properties</file>
-            <file>file:/C:/research/kderlm/kderlm/src/feedback/TwoDimKDE.java</file>
+            <file>file:/C:/research/kderlm/kderlm/src/wvec/WordVecs.java</file>
             <file>file:/C:/research/kderlm/kderlm/src/retriever/TrecDocRetriever.java</file>
-            <file>file:/C:/research/kderlm/kderlm/src/indexing/TrecDocIndexer.java</file>
-            <file>file:/C:/research/kderlm/kderlm/src/indexing/WTDocIndexer.java</file>
-            <file>file:/C:/research/kderlm/kderlm/src/wt10g/WTDocumentParser.java</file>
-            <file>file:/C:/research/kderlm/kderlm/src/wt10g/WTDocument.java</file>
-            <file>file:/C:/research/kderlm/kderlm/wt10g.properties</file>
-            <file>file:/C:/research/kderlm/kderlm/src/indexing/IndexHtmlToText.java</file>
+            <file>file:/C:/research/kderlm/kderlm/src/feedback/TwoDimKDE.java</file>
+            <file>file:/C:/research/kderlm/kderlm/src/feedback/RelevanceModelIId.java</file>
+            <file>file:/C:/research/kderlm/kderlm/init.properties</file>
+            <file>file:/C:/research/kderlm/kderlm/src/feedback/RelevanceModelConditional.java</file>
+            <file>file:/C:/research/kderlm/kderlm/src/feedback/OneDimKDE.java</file>
+            <file>file:/C:/research/kderlm/kderlm/src/wvec/WordVec.java</file>
         </group>
     </open-files>
 </project-private>

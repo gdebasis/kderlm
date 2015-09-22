@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import retriever.NNQueryExpander;
@@ -31,35 +30,21 @@ class KLDivScoreComparator implements Comparator<ScoreDoc> {
     }    
 }
 
-public class OneDimKDE {
-    TrecDocRetriever retriever;
-    TRECQuery trecQuery;
-    TopDocs topDocs;
-    QueryVecComposer composer;
-    RetrievedDocsTermStats retrievedDocsTermStats;
-    QueryWordVecs qwvecs;
+public class OneDimKDE extends RelevanceModelIId {
     HashMap<String, Kernel> kernels;
-    Properties prop;
     Kernel kernelF;
-    int numTopDocs;
-    float mixingLambda;
     boolean toExpand;
+    boolean autoParams;
     NNQueryExpander nnQexpander;
     
-    static WordVecs wvecs;  // to be shared across every feedback
-                            // object (one for each query)
-            
     public OneDimKDE(TrecDocRetriever retriever, TRECQuery trecQuery, TopDocs topDocs) throws Exception {
-        this.prop = retriever.getProperties();
+        super(retriever, trecQuery, topDocs);
         
-        // singleton instance shared across all feedback objects
-        if (wvecs == null)
-            wvecs = new WordVecs(prop);
+        toExpand = Boolean.parseBoolean(prop.getProperty("kde.queryexpansion", "false"));        
+        if (toExpand)
+            nnQexpander = new NNQueryExpander(wvecs,
+                    Integer.parseInt(prop.getProperty("queryexpansion.nterms")));            
         
-        this.retriever = retriever;
-        this.trecQuery = trecQuery;
-        this.topDocs = topDocs;
-        composer = new QueryVecComposer(trecQuery, wvecs, prop);
         kernels = new HashMap<>();
         kernels.put("gaussian",
                 new GaussianKernel(
@@ -69,14 +54,30 @@ public class OneDimKDE {
         kernels.put("triangular", new TriangularKernel(
                 Float.parseFloat(prop.getProperty("kde.h"))                
                 ));
-        kernelF = kernels.get(prop.getProperty("kde.kernel"));        
-        numTopDocs = Integer.parseInt(prop.getProperty("kde.numtopdocs"));
-        mixingLambda = Float.parseFloat(prop.getProperty("kde.lambda"));        
-        toExpand = Boolean.parseBoolean(prop.getProperty("kde.queryexpansion", "false"));
-        
-        if (toExpand)
-            nnQexpander = new NNQueryExpander(wvecs,
-                    Integer.parseInt(prop.getProperty("queryexpansion.nterms")));            
+        String kernelFuncName = prop.getProperty("kde.kernel");
+        if (kernelFuncName.equals("gaussian")) {
+            if (Boolean.parseBoolean(prop.getProperty("kde.gaussian.autoparams", "false")))
+                autoParams = true;
+        }
+        kernelF = kernels.get(kernelFuncName);        
+    }
+    
+    void setAutoParams() {
+        float sigma = 0f;
+        float avgNorm = 0f;
+        int n = qwvecs.getVecs().size();
+        for (WordVec qvec : qwvecs.getVecs()) {
+            if (qvec != null)
+                avgNorm += qvec.getNorm();
+        }
+        for (WordVec qvec : qwvecs.getVecs()) {
+            if (qvec != null)
+                sigma += Math.pow(qvec.getNorm() - avgNorm, 2);
+        }
+        ((GaussianKernel)kernelF).sigma = (float)Math.sqrt(sigma);
+        ((GaussianKernel)kernelF).h =
+                1.06f * ((GaussianKernel)kernelF).sigma *
+                (float)Math.pow(n, -0.2f);
     }
         
     float computeKernelFunction(WordVec a, WordVec b) {
@@ -84,8 +85,8 @@ public class OneDimKDE {
         return kernelF.fKernel(dist);
     }
     
-    public void prepareQueryVector() {
-        
+    @Override
+    public void prepareQueryVector() {        
         if (toExpand) {
             nnQexpander.expandQuery(trecQuery);
         }
@@ -93,19 +94,16 @@ public class OneDimKDE {
         if (Boolean.parseBoolean(prop.getProperty("kde.compose")))
             composer.formComposedQuery();
         qwvecs = composer.getQueryWordVecs();
-    }
-    
-    public void buildTermStats() throws Exception {
-        retrievedDocsTermStats = new
-                RetrievedDocsTermStats(retriever.getReader(),
-                wvecs, topDocs, numTopDocs);
-        retrievedDocsTermStats.buildAllStats();
+        
+        if (autoParams)
+            setAutoParams();
     }
     
     /* In one dimensional KDE, we don't care about the individual
      * documents, but rather only take into consideration the whole
      * set of pseudo-relevant documents as a whole.
      */
+    @Override
     public void computeKDE() throws Exception {
         
         float f_w; // KDE estimation for term w
@@ -115,7 +113,7 @@ public class OneDimKDE {
         
         buildTermStats();
         prepareQueryVector();
-
+        
         /* For each w \in V (vocab of top docs),
          * compute f(w) = \sum_{q \in qwvecs} K(w,q) */
         for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
@@ -148,42 +146,5 @@ public class OneDimKDE {
         }
     }
     
-    float mixTfIdf(RetrievedDocTermInfo w) {
-        return mixingLambda*w.tf/(float)retrievedDocsTermStats.sumTf +
-                (1-mixingLambda)*w.df/retrievedDocsTermStats.sumDf;        
-    }
-    
-    public TopDocs rerankDocs() {
-        TopDocs rerankedDocs = null;
-        ScoreDoc[] klDivScoreDocs = new ScoreDoc[this.topDocs.scoreDocs.length];
-        float klDiv;
-        float p_w_D;    // P(w|D) for this doc D
-        final float EPSILON = 0.0001f;
-        
-        // For each document
-        for (int i = 0; i < topDocs.scoreDocs.length; i++) {
-            klDiv = 0;
-            klDivScoreDocs[i] = new ScoreDoc(topDocs.scoreDocs[i].doc, klDiv);
-            PerDocTermVector docVector = this.retrievedDocsTermStats.docTermVecs.get(i);
-            
-            // For each v \in V (vocab of top ranked documents)
-            for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
-                RetrievedDocTermInfo w = e.getValue();
-                
-                float ntf = docVector.getNormalizedTf(w.wvec.getWord());
-                if (ntf == 0)
-                    ntf = EPSILON;
-                p_w_D = ntf;
-                klDiv += w.wt * Math.log(w.wt/p_w_D);
-            }
-            klDivScoreDocs[i].score = klDiv;
-        }
-        
-        // Sort the scoredocs in ascending order of the KL-Div scores
-        Arrays.sort(klDivScoreDocs, new KLDivScoreComparator());
-        
-        rerankedDocs = new TopDocs(topDocs.totalHits, klDivScoreDocs, klDivScoreDocs[klDivScoreDocs.length-1].score);
-        return rerankedDocs;
-    }    
 }
 

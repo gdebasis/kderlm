@@ -40,7 +40,7 @@ public class WordVec implements Comparable<WordVec>, Serializable {
         vec = new float[tokens.length-1];
         for (int i = 1; i < tokens.length; i++)
             vec[i-1] = Float.parseFloat(tokens[i]);
-        norm = computeNorm();
+        norm = getNorm();
         // Normalize the vectors
         for (int i = 0; i < vec.length; i++)
             vec[i] = vec[i]/norm;
@@ -48,7 +48,7 @@ public class WordVec implements Comparable<WordVec>, Serializable {
     
     public boolean isComposed() { return isComposed; }
     
-    private float computeNorm() {
+    public float getNorm() {
         // calculate and store
         float sum = 0;
         for (int i = 0; i < vec.length; i++) {

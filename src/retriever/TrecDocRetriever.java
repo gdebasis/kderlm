@@ -11,6 +11,8 @@ package retriever;
 
 import evaluator.Evaluator;
 import feedback.OneDimKDE;
+import feedback.RelevanceModelConditional;
+import feedback.RelevanceModelIId;
 import feedback.RetrievedDocsTermStats;
 import feedback.TwoDimKDE;
 import indexing.TrecDocIndexer;
@@ -117,12 +119,19 @@ public class TrecDocRetriever {
     }
     
     public TopDocs applyFeedback(TRECQuery query, TopDocs topDocs) throws Exception {
-        OneDimKDE kde;
+        RelevanceModelIId kde;
                 
         kde = kdeType.equals("uni")? new OneDimKDE(this, query, topDocs) :
-                new TwoDimKDE(this, query, topDocs);
+                kdeType.equals("bi")? new TwoDimKDE(this, query, topDocs) :
+                kdeType.equals("rlm_iid")? new RelevanceModelIId(this, query, topDocs) :
+                new RelevanceModelConditional(this, query, topDocs);
         
         kde.computeKDE();
+        if (prop.getProperty("clarity.collmodel", "global").equals("global"))
+            System.out.println("Clarity: " + kde.getQueryClarity(reader));
+        else
+            System.out.println("Clarity: " + kde.getQueryClarity());
+            
         return kde.rerankDocs();
     }
     

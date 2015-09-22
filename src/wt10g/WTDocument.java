@@ -96,12 +96,17 @@ public class WTDocument {
     
     Document constructLuceneDoc() {
         Document doc = new Document();
+        
+        if (this.title == null)
+            this.title = "";
+        
         doc.add(new Field(FIELD_ID, this.docNo, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         // store the title and the raw html
-        doc.add(new Field(WTDOC_FIELD_TITLE, this.title==null? "" : this.title,
+        doc.add(new Field(WTDOC_FIELD_TITLE, this.title,
                 Field.Store.NO, Field.Index.ANALYZED));
         
+        /*
         String ppContent = null;
         try {
             ppContent = preProcess(this.text);
@@ -110,10 +115,11 @@ public class WTDocument {
             ex.printStackTrace();
             ppContent = "";
         }
+        */
         
         // the words (also store the term vector)
-        doc.add(new Field(FIELD_ANALYZED_CONTENT, ppContent,
-                Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field(FIELD_ANALYZED_CONTENT, this.title + " " + this.text,
+                Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES));
         
         return doc;        
     }

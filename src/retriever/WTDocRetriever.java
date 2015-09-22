@@ -23,7 +23,8 @@ public class WTDocRetriever extends TrecDocRetriever {
     @Override
     public List<TRECQuery> constructQueries() throws Exception {        
         String queryFile = prop.getProperty("query.file");
-        TRECQueryParser parser = new WTQueryParser(queryFile, indexer.getAnalyzer());
+        //TRECQueryParser parser = new WTQueryParser(queryFile, indexer.getAnalyzer());
+        TRECQueryParser parser = new TRECQueryParser(queryFile, indexer.getAnalyzer());
         parser.parse();
         return parser.getQueries();
     }
