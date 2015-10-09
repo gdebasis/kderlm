@@ -48,6 +48,9 @@ public class WTDocument {
     }
     
     void extractText() {
+        text = html;
+        /* It turns out that treating the entire HTML as text produces
+        better results.
         try {
             InputStream input = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
             ContentHandler handler = new BodyContentHandler(MAX_CHARACTERS);
@@ -59,6 +62,7 @@ public class WTDocument {
         catch (Exception ex) {
             text = html;
         }
+        */
     }
 
     BytesRef compress(String str) {

@@ -27,10 +27,10 @@ import wvec.WordVecs;
  *
  * @author Debasis
  */
-class RetrievedDocTermInfo {
+class RetrievedDocTermInfo implements Comparable<RetrievedDocTermInfo> {
     WordVec wvec;
     int tf;
-    long df;
+    int df;
     float wt;   // weight of this term, e.g. the P(w|R) value    
 
     public RetrievedDocTermInfo(WordVec wvec) {
@@ -40,6 +40,11 @@ class RetrievedDocTermInfo {
     public RetrievedDocTermInfo(WordVec wvec, int tf) {
         this.wvec = wvec;
         this.tf = tf;
+    }
+
+    @Override
+    public int compareTo(RetrievedDocTermInfo that) { // descending order
+        return this.wt < that.wt? 1 : this.wt == that.wt? 0 : -1;
     }
 }
 
@@ -111,6 +116,8 @@ public class RetrievedDocsTermStats {
         docTermVecs = new ArrayList<>();
         this.numTopDocs = numTopDocs;
     }
+    
+    public IndexReader getReader() { return reader; }
     
     public void buildAllStats() throws Exception {
         int rank = 0;

@@ -36,7 +36,7 @@ public class RelevanceModelConditional extends RelevanceModelIId {
             for (Map.Entry<String, RetrievedDocTermInfo> e : docvec.perDocStats.entrySet()) {
                 RetrievedDocTermInfo w = e.getValue();
                 p_w = mixTfIdf(w, docvec);
-                this_wt = p_w * docvec.sim;
+                this_wt = p_w * docvec.sim/this.retrievedDocsTermStats.sumSim;
                 
                 // Take the average
                 RetrievedDocTermInfo wGlobal = retrievedDocsTermStats.getTermStats(w.wvec);

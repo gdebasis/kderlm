@@ -70,14 +70,18 @@ public class OneDimKDE extends RelevanceModelIId {
             if (qvec != null)
                 avgNorm += qvec.getNorm();
         }
+        avgNorm = avgNorm / (float)n;
         for (WordVec qvec : qwvecs.getVecs()) {
             if (qvec != null)
                 sigma += Math.pow(qvec.getNorm() - avgNorm, 2);
         }
+        sigma = sigma / (float)n;
         ((GaussianKernel)kernelF).sigma = (float)Math.sqrt(sigma);
         ((GaussianKernel)kernelF).h =
                 1.06f * ((GaussianKernel)kernelF).sigma *
                 (float)Math.pow(n, -0.2f);
+        System.out.println("sigma: " + ((GaussianKernel)kernelF).sigma +
+                            " h: " + ((GaussianKernel)kernelF).h);
     }
         
     float computeKernelFunction(WordVec a, WordVec b) {

@@ -6,12 +6,21 @@
 package feedback;
 
 import indexing.TrecDocIndexer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import retriever.TrecDocRetriever;
 import trec.TRECQuery;
@@ -33,7 +42,11 @@ public class RelevanceModelIId {
     QueryWordVecs qwvecs;
     QueryVecComposer composer;
     WordVecs wvecs;  // to be shared across every feedback
-
+    int nterms;
+    float fbweight;
+    IndexReader reader;
+    static final float TERM_SEL_DF_THRESH = 0.8f;
+    
     public RelevanceModelIId(TrecDocRetriever retriever, TRECQuery trecQuery, TopDocs topDocs) throws Exception {
         this.prop = retriever.getProperties();
         this.retriever = retriever;
@@ -46,7 +59,9 @@ public class RelevanceModelIId {
         if (wvecs == null)
             wvecs = new WordVecs(prop);
         
-        composer = new QueryVecComposer(trecQuery, wvecs, prop);        
+        composer = new QueryVecComposer(trecQuery, wvecs, prop);
+        nterms = Integer.parseInt(prop.getProperty("rlm.qe.nterms", "10"));
+        fbweight = Float.parseFloat(prop.getProperty("rlm.qe.newterms.wt"));
     }
     
     public void buildTermStats() throws Exception {
@@ -54,6 +69,7 @@ public class RelevanceModelIId {
                 RetrievedDocsTermStats(retriever.getReader(),
                 wvecs, topDocs, numTopDocs);
         retrievedDocsTermStats.buildAllStats();
+        reader = retrievedDocsTermStats.getReader();
     }
     
     float mixTfIdf(RetrievedDocTermInfo w) {
@@ -67,14 +83,14 @@ public class RelevanceModelIId {
                 (1-mixingLambda)*wGlobalInfo.df/retrievedDocsTermStats.sumDf;        
     }
             
-    public void prepareQueryVector() {        
-        qwvecs = composer.getQueryWordVecs();
+    public void prepareQueryVector() {
+        if (qwvecs == null)
+            qwvecs = composer.getQueryWordVecs();
     }
 
     public void computeKDE() throws Exception {
         float p_q;
         float p_w;
-        float total_p_q = 0;
         
         buildTermStats();
         prepareQueryVector();
@@ -82,6 +98,7 @@ public class RelevanceModelIId {
         /* For each w \in V (vocab of top docs),
          * compute f(w) = \sum_{q \in qwvecs} K(w,q) */
         for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
+            float total_p_q = 0;
             RetrievedDocTermInfo w = e.getValue();
             p_w = mixTfIdf(w);
             
@@ -95,12 +112,11 @@ public class RelevanceModelIId {
                     System.err.println("No KDE for query term: " + qwvec.getWord());
                     continue;
                 }
-                p_q = qtermInfo.tf/(float)retrievedDocsTermStats.sumTf;
+                p_q = qtermInfo.tf/(float)retrievedDocsTermStats.sumTf; //mixTfIdf(qtermInfo); //
                 
                 total_p_q += Math.log(1+p_q);
             }
-            
-            w.wt = p_w * total_p_q;
+            w.wt = p_w * (float)Math.exp(total_p_q-1);
         }
     }
     
@@ -161,4 +177,57 @@ public class RelevanceModelIId {
         }
         return klDiv;
     }    
+    
+    // Implement post-RLM query expansion. Set the term weights
+    // according to the values of f(w).
+    public TRECQuery expandQuery() throws Exception {
+        
+        // The calling sequence has to make sure that the top docs are already
+        // reranked by KL-div
+        // Now reestimate relevance model on the reranked docs this time
+        // for QE.
+        computeKDE();
+        
+        List<RetrievedDocTermInfo> termStats = new ArrayList<>();
+        for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
+            RetrievedDocTermInfo w = e.getValue();
+            if (w.wt > 0)
+                w = w;
+            w.wt = w.wt *
+                    (float)Math.log(
+                        reader.numDocs()/(float)
+                        reader.docFreq(new Term(TrecDocIndexer.FIELD_ANALYZED_CONTENT, w.wvec.getWord())));
+            termStats.add(w);
+        }
+        Collections.sort(termStats);
+        
+        TRECQuery expandedQuery = new TRECQuery(this.trecQuery);
+        Set<Term> origTerms = new HashSet<Term>();
+        this.trecQuery.luceneQuery.extractTerms(origTerms);
+        expandedQuery.luceneQuery = new BooleanQuery();
+        HashMap<String, String> origQueryWordStrings = new HashMap<>();
+        
+        for (Term t : origTerms) {
+            origQueryWordStrings.put(t.text(), t.text());
+            TermQuery tq = new TermQuery(t);
+            tq.setBoost(1-fbweight);
+            ((BooleanQuery)expandedQuery.luceneQuery).add(tq, BooleanClause.Occur.SHOULD);
+        }
+        
+        int nTermsAdded = 0;
+        for (RetrievedDocTermInfo selTerm : termStats) {            
+            String thisTerm = selTerm.wvec.getWord();
+            if (origQueryWordStrings.get(thisTerm) != null)
+                continue;
+            TermQuery tq = new TermQuery(new Term(TrecDocIndexer.FIELD_ANALYZED_CONTENT, thisTerm));
+            ((BooleanQuery)expandedQuery.luceneQuery).add(tq, BooleanClause.Occur.SHOULD);
+            tq.setBoost(fbweight);
+            nTermsAdded++;
+            if (nTermsAdded >= nterms)
+                break;
+        }
+        
+        return expandedQuery;
+    }
+        
 }

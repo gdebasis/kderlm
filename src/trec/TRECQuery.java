@@ -32,5 +32,14 @@ public class TRECQuery {
         return luceneQuery.toString();
     }
 
+    public TRECQuery() {}
+    
+    public TRECQuery(TRECQuery that) { // copy constructor
+        this.id = that.id;
+        this.title = that.title;
+        this.desc = that.desc;
+        this.narr = that.narr;
+    }
+
     public Query getLuceneQueryObj() { return luceneQuery; }    
 }

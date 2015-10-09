@@ -41,6 +41,8 @@ public class TrecDocRetriever {
     Properties prop;
     String runName;
     String kdeType;
+    boolean postRLMQE;
+    boolean postQERerank;
     
     public TrecDocRetriever(String propFile) throws Exception {
         indexer = new TrecDocIndexer(propFile);
@@ -115,7 +117,7 @@ public class TrecDocRetriever {
         
         if (Boolean.parseBoolean(prop.getProperty("eval"))) {
             evaluate();
-        }        
+        }
     }
     
     public TopDocs applyFeedback(TRECQuery query, TopDocs topDocs) throws Exception {
@@ -127,12 +129,43 @@ public class TrecDocRetriever {
                 new RelevanceModelConditional(this, query, topDocs);
         
         kde.computeKDE();
-        if (prop.getProperty("clarity.collmodel", "global").equals("global"))
-            System.out.println("Clarity: " + kde.getQueryClarity(reader));
-        else
-            System.out.println("Clarity: " + kde.getQueryClarity());
-            
+        
+        if (Boolean.parseBoolean(prop.getProperty("clarity_compute", "false"))) {
+            if (prop.getProperty("clarity.collmodel", "global").equals("global"))
+                System.out.println("Clarity: " + kde.getQueryClarity(reader));
+            else
+                System.out.println("Clarity: " + kde.getQueryClarity());
+        }
+        
+        postRLMQE = Boolean.parseBoolean(prop.getProperty("rlm.qe", "false"));
+        TopDocs reranked = kde.rerankDocs();
+        if (!postRLMQE)
+            return reranked;
+        
+        // Post retrieval query expansion
+        TRECQuery expandedQuery = kde.expandQuery();
+        System.out.println("Expanded qry: " + expandedQuery.getLuceneQueryObj());
+        
+        // Reretrieve with expanded query
+        TopScoreDocCollector collector = TopScoreDocCollector.create(numWanted, true);
+        searcher.search(expandedQuery.getLuceneQueryObj(), collector);
+        topDocs = collector.topDocs();
+        
+        /*
+        postQERerank = Boolean.parseBoolean(prop.getProperty("rlm.qe.rerank", "false"));
+        if (!postQERerank)
+            return topDocs;
+        
+        kde = kdeType.equals("uni")? new OneDimKDE(this, query, topDocs) :
+                kdeType.equals("bi")? new TwoDimKDE(this, query, topDocs) :
+                kdeType.equals("rlm_iid")? new RelevanceModelIId(this, query, topDocs) :
+                new RelevanceModelConditional(this, query, topDocs);
+        
+        kde.computeKDE();
         return kde.rerankDocs();
+        */
+        
+        return topDocs;
     }
     
     public void evaluate() throws Exception {
