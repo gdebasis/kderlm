@@ -7,6 +7,9 @@ package evaluator;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,16 +130,15 @@ class ResultTuple implements Comparable<ResultTuple> {
     }
 }
 
-
 class RetrievedResults implements Comparable<RetrievedResults> {
-    int qid;
+    String qid;
     List<ResultTuple> rtuples;
     int numRelRet;
     float avgP;    
     PerQueryRelDocs relInfo;
     
     public RetrievedResults(String qid) {
-        this.qid = Integer.parseInt(qid);
+        this.qid = qid;
         this.rtuples = new ArrayList<>(1000);
         avgP = -1;
         numRelRet = -1;
@@ -175,16 +177,46 @@ class RetrievedResults implements Comparable<RetrievedResults> {
         int numRel = relInfo.numRel;
         int numRelSeen = 0;
         for (ResultTuple tuple : this.rtuples) {            
-            if (tuple.rel < 1)
+            if (tuple.rel < Evaluator.threshold)
                 continue;
             numRelSeen++;
             prec += numRelSeen/(float)(tuple.rank);
         }
         numRelRet = numRelSeen;
-        prec /= (float)numRel;
+        prec = numRel==0? 0 : prec/(float)numRel;
         this.avgP = prec;
         
         return prec;        
+    }
+        
+    float computeDCG(List<ResultTuple> rtuples, int cutoff) {
+        float dcgSum = 0;
+        int count = 1;
+        for (ResultTuple tuple : rtuples) {            
+            int twoPowerRel = 1<<tuple.rel;
+            float dcg = (twoPowerRel - 1)/(float)(Math.log(count+1)/Math.log(2));
+            dcgSum += dcg;
+            if (count >= cutoff)
+                break;
+            count++;
+        }
+        return dcgSum;
+    }    
+    
+    float computeNDCG(int ntops) {
+        float dcg = 0, idcg = 0;
+        List<ResultTuple> idealTuples = new ArrayList<>(rtuples);
+        Collections.sort(idealTuples, new Comparator<ResultTuple>() {
+            @Override
+            public int compare(ResultTuple thisObj, ResultTuple thatObj) { // descending in rel values
+                return thisObj.rel > thatObj.rel? -1 : thisObj.rel == thatObj.rel? 0 : 1;
+            }
+        });
+                
+        dcg = computeDCG(this.rtuples, ntops);
+        idcg = computeDCG(idealTuples, ntops);
+        
+        return idcg>0? dcg/idcg: 0;
     }
     
     float precAtTop(int k) {
@@ -214,7 +246,7 @@ class RetrievedResults implements Comparable<RetrievedResults> {
     
     @Override
     public int compareTo(RetrievedResults that) {
-        return this.qid < that.qid? -1 : this.qid == that.qid? 0 : 1;
+        return this.qid.compareTo(that.qid);
     }
 }
 
@@ -275,20 +307,32 @@ class AllRetrievedResults {
         float avgRecall = 0f;
         float numQueries = (float)allRetMap.size();
         float pAt5 = 0f;
+        float ndcg = 0;
+        float ndcg_5 = 0;
         
         for (Map.Entry<String, RetrievedResults> e : allRetMap.entrySet()) {
             RetrievedResults res = e.getValue();
             float ap = res.computeAP();
             map += ap;
-            gm_ap += Math.log(ap);
+            gm_ap += ap>0? Math.log(ap): 0;
             avgRecall += res.computeRecall();
             pAt5 += res.precAtTop(5);
+            if (Evaluator.graded) {
+                float thisNDCG = res.computeNDCG(res.rtuples.size());
+                float thisNDCG_5 = res.computeNDCG(5);
+                ndcg += thisNDCG;
+                ndcg_5 = thisNDCG_5;
+            }
         }
         
         buff.append("recall:\t").append(avgRecall/(float)allRelInfo.getTotalNumRel()).append("\n");
         buff.append("map:\t").append(map/numQueries).append("\n");
         buff.append("gmap:\t").append((float)Math.exp(gm_ap/numQueries)).append("\n");
         buff.append("P@5:\t").append(pAt5/numQueries).append("\n");
+        if (Evaluator.graded) {
+            buff.append("nDCG:\t").append(ndcg/numQueries).append("\n");
+            buff.append("nDCG@5:\t").append(ndcg_5/numQueries).append("\n");
+        }
         
         return buff.toString();
     }    
@@ -297,15 +341,24 @@ class AllRetrievedResults {
 public class Evaluator {
     AllRelRcds relRcds;
     AllRetrievedResults retRcds;
+    static boolean graded;
+    static int threshold;
     
     public Evaluator(String qrelsFile, String resFile) {
         relRcds = new AllRelRcds(qrelsFile);
-        retRcds = new AllRetrievedResults(resFile);        
+        retRcds = new AllRetrievedResults(resFile);
+        graded = true;
+        threshold = 1;
     }
     
     public Evaluator(Properties prop) {
         String qrelsFile = prop.getProperty("qrels.file");
         String resFile = prop.getProperty("res.file");
+        graded = Boolean.parseBoolean(prop.getProperty("evaluate.graded", "false"));
+        if (graded)
+            threshold = Integer.parseInt(prop.getProperty("evaluate.graded_to_bin.threshold", "1"));
+        else
+            threshold = 1;
         relRcds = new AllRelRcds(qrelsFile);
         retRcds = new AllRetrievedResults(resFile);        
     }

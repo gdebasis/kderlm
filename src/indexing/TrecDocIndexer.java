@@ -16,7 +16,6 @@ import java.util.Properties;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;

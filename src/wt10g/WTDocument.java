@@ -7,11 +7,8 @@ package wt10g;
 
 import static indexing.TrecDocIndexer.FIELD_ANALYZED_CONTENT;
 import static indexing.TrecDocIndexer.FIELD_ID;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPOutputStream;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -19,11 +16,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.util.BytesRef;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
 
 /**
  *
@@ -83,7 +75,7 @@ public class WTDocument {
 
         StringBuffer tokenizedContentBuff = new StringBuffer();
 
-        TokenStream stream = analyzer.tokenStream("dummy", new StringReader(text));
+        TokenStream stream = analyzer.tokenStream(FIELD_ANALYZED_CONTENT, new StringReader(text));
         CharTermAttribute termAtt = stream.addAttribute(CharTermAttribute.class);
         stream.reset();
 
@@ -123,7 +115,7 @@ public class WTDocument {
         
         // the words (also store the term vector)
         doc.add(new Field(FIELD_ANALYZED_CONTENT, this.title + " " + this.text,
-                Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES));
+                Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES));
         
         return doc;        
     }

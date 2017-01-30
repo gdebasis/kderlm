@@ -105,7 +105,7 @@ public class TrecDocRetriever {
             System.out.println("Retrieved results for query " + query.id);
 
             // Apply feedback
-            if (Boolean.parseBoolean(prop.getProperty("feedback"))) {
+            if (Boolean.parseBoolean(prop.getProperty("feedback")) && topDocs.scoreDocs.length > 0) {
                 topDocs = applyFeedback(query, topDocs);
             }
             
@@ -128,7 +128,13 @@ public class TrecDocRetriever {
                 kdeType.equals("rlm_iid")? new RelevanceModelIId(this, query, topDocs) :
                 new RelevanceModelConditional(this, query, topDocs);
         
-        kde.computeKDE();
+        try {
+            kde.computeKDE();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return topDocs;
+        }
         
         if (Boolean.parseBoolean(prop.getProperty("clarity_compute", "false"))) {
             if (prop.getProperty("clarity.collmodel", "global").equals("global"))

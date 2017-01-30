@@ -188,29 +188,40 @@ public class RelevanceModelIId {
         // for QE.
         computeKDE();
         
-        List<RetrievedDocTermInfo> termStats = new ArrayList<>();
-        for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
-            RetrievedDocTermInfo w = e.getValue();
-            if (w.wt > 0)
-                w = w;
-            w.wt = w.wt *
-                    (float)Math.log(
-                        reader.numDocs()/(float)
-                        reader.docFreq(new Term(TrecDocIndexer.FIELD_ANALYZED_CONTENT, w.wvec.getWord())));
-            termStats.add(w);
-        }
-        Collections.sort(termStats);
-        
         TRECQuery expandedQuery = new TRECQuery(this.trecQuery);
         Set<Term> origTerms = new HashSet<Term>();
         this.trecQuery.luceneQuery.extractTerms(origTerms);
         expandedQuery.luceneQuery = new BooleanQuery();
         HashMap<String, String> origQueryWordStrings = new HashMap<>();
         
+        float normalizationFactor = 0;
+        
+        List<RetrievedDocTermInfo> termStats = new ArrayList<>();
+        for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
+            RetrievedDocTermInfo w = e.getValue();
+            w.wt = w.wt *
+                    (float)Math.log(
+                        reader.numDocs()/(float)
+                        reader.docFreq(new Term(TrecDocIndexer.FIELD_ANALYZED_CONTENT, w.wvec.getWord())));
+            termStats.add(w);
+            normalizationFactor += w.wt;
+        }
+        
+        // Normalize the weights
+        for (Map.Entry<String, RetrievedDocTermInfo> e : retrievedDocsTermStats.termStats.entrySet()) {
+            RetrievedDocTermInfo w = e.getValue();
+            w.wt = w.wt/normalizationFactor;
+        }
+        
+        Collections.sort(termStats);
+        
         for (Term t : origTerms) {
             origQueryWordStrings.put(t.text(), t.text());
             TermQuery tq = new TermQuery(t);
-            tq.setBoost(1-fbweight);
+            //+++POST_SIGIR review: Assigned weights according to RLM post QE
+            //tq.setBoost(1-fbweight);
+            tq.setBoost((1-fbweight)/(float)origTerms.size());
+            //---POST_SIGIR review
             ((BooleanQuery)expandedQuery.luceneQuery).add(tq, BooleanClause.Occur.SHOULD);
         }
         
@@ -221,7 +232,13 @@ public class RelevanceModelIId {
                 continue;
             TermQuery tq = new TermQuery(new Term(TrecDocIndexer.FIELD_ANALYZED_CONTENT, thisTerm));
             ((BooleanQuery)expandedQuery.luceneQuery).add(tq, BooleanClause.Occur.SHOULD);
-            tq.setBoost(fbweight);
+            
+            //+++POST_SIGIR review: Assigned weights according to RLM post QE
+            //tq.setBoost(fbweight);
+            tq.setBoost(fbweight*selTerm.wt);
+            //tq.setBoost(selTerm.wt);
+            //---POST_SIGIR review
+            
             nTermsAdded++;
             if (nTermsAdded >= nterms)
                 break;
