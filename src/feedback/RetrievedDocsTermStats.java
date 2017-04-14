@@ -27,73 +27,6 @@ import wvec.WordVecs;
  *
  * @author Debasis
  */
-class RetrievedDocTermInfo implements Comparable<RetrievedDocTermInfo> {
-    WordVec wvec;
-    int tf;
-    int df;
-    float wt;   // weight of this term, e.g. the P(w|R) value    
-
-    public RetrievedDocTermInfo(WordVec wvec) {
-        this.wvec = wvec;
-    }
-    
-    public RetrievedDocTermInfo(WordVec wvec, int tf) {
-        this.wvec = wvec;
-        this.tf = tf;
-    }
-
-    @Override
-    public int compareTo(RetrievedDocTermInfo that) { // descending order
-        return this.wt < that.wt? 1 : this.wt == that.wt? 0 : -1;
-    }
-}
-
-class PerDocTermVector {
-    int docId;
-    int sum_tf;
-    float sim;  // similarity with query
-    HashMap<String, RetrievedDocTermInfo> perDocStats;
-    
-    public PerDocTermVector(int docId) {
-        this.docId = docId;
-        perDocStats = new HashMap<>();
-        sum_tf = 0;
-    }
-    
-    public float getNormalizedTf(String term) {
-        RetrievedDocTermInfo tInfo = perDocStats.get(term);
-        if (tInfo == null)
-            return 0;
-        return perDocStats.get(term).tf/(float)sum_tf;
-    }
-    
-    RetrievedDocTermInfo getTermStats(WordVec wv) {
-        RetrievedDocTermInfo tInfo;
-        String qTerm = wv.getWord();
-        if (qTerm == null)
-            return null;
-        
-        // Check if this word is a composed vector
-        if (!wv.isComposed()) {
-            tInfo = this.perDocStats.get(qTerm);
-            return tInfo;
-        }
-            
-        // Split up the composed into it's constituents
-        String[] qTerms = qTerm.split(WordVec.COMPOSING_DELIM);
-        RetrievedDocTermInfo firstTerm = this.perDocStats.get(qTerms[0]);
-        if (firstTerm == null)
-            return null;
-        RetrievedDocTermInfo secondTerm = this.perDocStats.get(qTerms[1]);
-        if (secondTerm == null)
-            return null;
-        tInfo = new RetrievedDocTermInfo(wv);
-        tInfo.tf = firstTerm.tf * secondTerm.tf;
-        
-        return tInfo;
-    }    
-}
-
 public class RetrievedDocsTermStats {
     TopDocs topDocs;
     IndexReader reader;
@@ -118,6 +51,10 @@ public class RetrievedDocsTermStats {
     }
     
     public IndexReader getReader() { return reader; }
+    
+    public Map<String, RetrievedDocTermInfo> getTermStats() {
+        return termStats;
+    }
     
     public void buildAllStats() throws Exception {
         int rank = 0;

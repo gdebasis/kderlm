@@ -64,6 +64,10 @@ public class RelevanceModelIId {
         fbweight = Float.parseFloat(prop.getProperty("rlm.qe.newterms.wt"));
     }
     
+    public RetrievedDocsTermStats getRetrievedDocsTermStats() {
+        return this.retrievedDocsTermStats;
+    }
+    
     public void buildTermStats() throws Exception {
         retrievedDocsTermStats = new
                 RetrievedDocsTermStats(retriever.getReader(),

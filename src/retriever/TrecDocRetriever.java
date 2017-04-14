@@ -13,6 +13,7 @@ import evaluator.Evaluator;
 import feedback.OneDimKDE;
 import feedback.RelevanceModelConditional;
 import feedback.RelevanceModelIId;
+import feedback.RetrievedDocTermInfo;
 import feedback.RetrievedDocsTermStats;
 import feedback.TwoDimKDE;
 import indexing.TrecDocIndexer;
@@ -76,7 +77,79 @@ public class TrecDocRetriever {
         TRECQueryParser parser = new TRECQueryParser(queryFile, indexer.getAnalyzer());
         parser.parse();
         return parser.getQueries();
-    }    
+    }
+    
+    // Computes the similarity of two queries based on KL-divergence
+    // of the estimated relevance models. More precisely, if Q1 and Q2
+    // are two queries, the function computes pi = P(w|Qi,TOP(Qi)) for i=1,2
+    // It then computes KL(p1, p2)
+    public float computeQuerySimilarity(TRECQuery q1, TRECQuery q2, int ntop) throws Exception {
+        
+        // Get the top docs for both q1 and q2
+        TopDocs q1_topDocs = searcher.search(q1.getLuceneQueryObj(), ntop);
+        TopDocs q2_topDocs = searcher.search(q2.getLuceneQueryObj(), ntop);
+        
+        // Estimate the relevance models for each query and associated top-docs
+        RelevanceModelIId rm_q1 = new RelevanceModelConditional(this, q1, q1_topDocs);
+        RelevanceModelIId rm_q2 = new RelevanceModelConditional(this, q2, q2_topDocs);
+        
+        Map<String, RetrievedDocTermInfo> q1_topTermMap = rm_q1.getRetrievedDocsTermStats().getTermStats();
+        Map<String, RetrievedDocTermInfo> q2_topTermMap = rm_q2.getRetrievedDocsTermStats().getTermStats();
+        
+        // Merge the two models
+        Map<String, RetrievedDocTermInfo> mergedAvgModel =
+                mergeRelevanceModels(q1_topTermMap, q2_topTermMap);
+        // JS divergence
+        return (klDiv(q1_topTermMap, mergedAvgModel) + klDiv(q2_topTermMap, mergedAvgModel))/2;
+    }
+    
+    Map<String, RetrievedDocTermInfo> mergeRelevanceModels(
+            Map<String, RetrievedDocTermInfo> q1_topTermMap,
+            Map<String, RetrievedDocTermInfo> q2_topTermMap) {
+        
+        float wt = 0;
+        Map<String, RetrievedDocTermInfo> merged_topTermMap = new HashMap<>();
+        
+        for (RetrievedDocTermInfo a : q1_topTermMap.values()) {
+            RetrievedDocTermInfo b = q2_topTermMap.get(a.getTerm());
+            wt = a.getWeight();
+            if (b != null)
+                wt += b.getWeight();
+                
+            a.setWeight(wt/2);
+            merged_topTermMap.put(a.getTerm(), a);
+        }
+
+        for (RetrievedDocTermInfo a : q2_topTermMap.values()) {
+            RetrievedDocTermInfo b = q1_topTermMap.get(a.getTerm());
+            wt = a.getWeight();
+            if (b != null)
+                wt += b.getWeight();
+                
+            a.setWeight(wt/2);
+            merged_topTermMap.put(a.getTerm(), a);
+        }
+        
+        return merged_topTermMap;
+    }
+    
+    float klDiv(Map<String, RetrievedDocTermInfo> q1_topTermMap, Map<String, RetrievedDocTermInfo> q2_topTermMap) {
+        float kldiv = 0, a_wt, b_wt;
+        
+        for (RetrievedDocTermInfo a : q1_topTermMap.values()) {
+            String term = a.getTerm(); // for each term in model the first model
+            
+            // Get this term's weight in the second model
+            RetrievedDocTermInfo b = q2_topTermMap.get(term);
+            if (b == null)
+                continue;
+            
+            a_wt = a.getWeight();
+            b_wt = b.getWeight();
+            kldiv += a_wt * Math.log(a_wt/b_wt);
+        }
+        return kldiv;
+    }
     
     public void retrieveAll() throws Exception {
         TopScoreDocCollector collector;
